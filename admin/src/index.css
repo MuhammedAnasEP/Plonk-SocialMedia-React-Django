@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    .sidebar-container{
+        @apply bg-black opacity-90 h-[96%] w-[20rem] rounded-3xl ml-6 p-4 border transition-all duration-500 border border-solid border-glass relative
+    }
+    .sidebar{
+        @apply flex items-center mt-2 p-4 rounded-lg text-white cursor-pointer hover:bg-white hover:text-black transition-all duration-300
+    }
+}

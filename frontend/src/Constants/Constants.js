@@ -1,0 +1,13 @@
+export const baseUrl = "http://127.0.0.1:8000/api/";
+export const signup = "signup/"
+export const postimage = "postimage/"
+export const getpost = "getpost/"
+export const comments = "comment/"
+export const getcomments = "getcomments/"
+export const like = "like/"
+export const getlike = "getlike/"
+export const savepost = "savepost/"
+export const getsavedpost = "getsavedposts/"
+export const editprofile = "editprofile/"
+export const getuser = "getusers/"
+export const changepassword = "changepassword/"
