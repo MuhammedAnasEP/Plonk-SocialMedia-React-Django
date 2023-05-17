@@ -30,3 +30,14 @@ class Like(models.Model):
 class SavedPosts(models.Model):
     post = models.ForeignKey(Post, on_delete= models.CASCADE)
     user = models.ForeignKey(User, on_delete= models.CASCADE)
+
+class Friend(models.Model):
+    user = models.ForeignKey(User, related_name='following', on_delete=models.CASCADE)
+    follow_user = models.ForeignKey(User, related_name='followers', on_delete=models.CASCADE)
+    created = models.DateTimeField(default=timezone.now)
+
+class Notifications(models.Model):
+    sender = models.ForeignKey(User, related_name="sender", on_delete=models.CASCADE )
+    receiver = models.ForeignKey(User, related_name="reciver", on_delete=models.CASCADE)
+    message = models.CharField()
+    created = models.DateTimeField(default=timezone.now)

@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .models import User,Post,Comment,Like,SavedPosts
+from .models import User,Post,Comment,Like,SavedPosts,Friend,Notifications
 from .serializers import UserSerializer,PostSerializer,CommentSerializer,LikeSerializer,SavedSerializer
 from rest_framework import status,serializers
 from django.contrib.auth.hashers import make_password
@@ -138,6 +138,12 @@ def getUser(request):
     serializer = UserSerializer(users, many=False)
     return Response(serializer.data)
 
+@api_view(['POST'])
+def getAllUsers(request):
+    users = User.objects.all().order_by('-id')
+    serializer = UserSerializer(users, many=True)
+    return Response(serializer.data)
+
 @api_view(['PUT'])
 def editProfile(request, id):
     print("hello")
@@ -187,8 +193,24 @@ def deletePost(request,id):
     return Response("Post Deleted")
 
 @api_view(['PUT'])
-def deleteComment(request,id):
-    print("------------------------->",id)
+def deleteComment(request, id):
     comment = Comment.objects.get(id=id)
     comment.delete()
     return Response('Comment deleted')
+
+@api_view(['POST'])
+def Follow(request, id):
+    user = User.objects.get(id=id)
+    too = request.data['to']
+    to = User.objects.get(id=too)
+    print("--------------------->")
+    
+    follow = Friend.objects.create(user = user, follow_user = to)
+    follow.save()
+
+    message = user.username+' is followed you.' 
+    print()
+    notification = Notifications.objects.create(sender = user, receiver = to, message = message)
+    notification.save()
+
+    return Response("Followed")

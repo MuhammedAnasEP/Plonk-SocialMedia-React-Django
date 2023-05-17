@@ -47,7 +47,6 @@ function PostFormCard() {
     function getUser(){
         axios.post(getuser,JSON.stringify({"user_id":user.user_id}),{headers:{'Content-Type' : 'application/json'}}).then((respone)=>{
                     setProfile(respone.data.image)
-                    console.log("hello",respone.data.image)
         })
     }
 
@@ -59,6 +58,7 @@ function PostFormCard() {
                        <Avatar urls={profile}/>
                     </div>
                     <textarea onChange={(e) => { setDescription(e.target.value) }} value={description} className="grow py-3 h-14 outline-none" placeholder="Whats on your mind?" />
+                    {image && <img src={URL.createObjectURL(image)} className="w-[60px] h-14 rounded-md" />}
                 </div>
                 <div className="flex gap-5 items-center mt-2">
                     <div className="relative flex gap-3">
@@ -69,12 +69,6 @@ function PostFormCard() {
                             <span className="mt-1">Post</span>
                         </button>
                         <input onChange={(e) => { setImage(e.target.files[0]) }} name="image" type="file" className=" w-[60px] absolute top-0 opacity-0" />
-                        { image && <div className="mt-1 -ml-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
-                            </svg>
-                        </div>
-                        }
                     </div>
                     {/* <div>
                         <button className="flex gap-1">

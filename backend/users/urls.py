@@ -19,8 +19,10 @@ urlpatterns = [
     path('getsavedposts/',views.getSavedPosts),
     path('editprofile/<int:id>',views.editProfile),
     path('getusers/',views.getUser),
+    path('getallusers/',views.getAllUsers),
     path('changepassword/<int:id>',views.changePassword),
     path('editpost/<int:id>',views.editPost),
     path('deletepost/<int:id>',views.deletePost),
-    path('deletecomment/<int:id>',views.deleteComment)
+    path('deletecomment/<int:id>',views.deleteComment),
+    path('follow/<int:id>',views.Follow)
 ]
