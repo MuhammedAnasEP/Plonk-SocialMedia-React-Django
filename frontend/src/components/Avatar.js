@@ -12,7 +12,11 @@ function Avatar({size,urls}) {
         width = 'w-5'
         hight = 'h-5'
     }
-    console.log("urls",urls)
+
+    if (size === 'medium'){
+        width = 'w-8'
+        hight = 'h-8'
+    }
 
     return (
         <div className={`${width} ${hight} rounded-full overflow-hidden`}>

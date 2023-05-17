@@ -21,5 +21,6 @@ urlpatterns = [
     path('getusers/',views.getUser),
     path('changepassword/<int:id>',views.changePassword),
     path('editpost/<int:id>',views.editPost),
-    path('delete/<int:id>',views.deletePost)
+    path('deletepost/<int:id>',views.deletePost),
+    path('deletecomment/<int:id>',views.deleteComment)
 ]

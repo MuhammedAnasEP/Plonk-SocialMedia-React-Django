@@ -185,3 +185,10 @@ def deletePost(request,id):
     post = Post.objects.get(id = id)
     post.delete()
     return Response("Post Deleted")
+
+@api_view(['PUT'])
+def deleteComment(request,id):
+    print("------------------------->",id)
+    comment = Comment.objects.get(id=id)
+    comment.delete()
+    return Response('Comment deleted')

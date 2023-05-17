@@ -19,7 +19,7 @@ function AboutCard() {
     return (
         <Card>
             <h2 className="text-3xl mb-4 font-bold">About</h2>
-            {about !== 'null' ? <p className="mb-2 text-2">{about}</p> : <p className="mb-2 text-2 ml-5">Please provid information about your self.</p>}
+            {about !== 'null' ? (<p className="mb-2 text-2">{about}</p>) : (<p className="mb-2 text-2 ml-5"> <span className="text-xl mb-4 font-bold">Tell the world about yourself</span> <br/> <br/> Here’s where you can share more about yourself: your history, work experience, accomplishments, interests, dreams, and more.</p>)}
         </Card>
     )
 }

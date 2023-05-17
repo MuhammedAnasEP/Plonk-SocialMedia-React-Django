@@ -8,7 +8,7 @@ import {comments, getcomments, getlike, getpost, getsavedpost, like, savepost, g
 import axios from "../Axios"
 
 
-function PostCard() {
+function PostCard(active) {
     const [post,setPost] = useState(null)
     const [oldComments,setOldCommets] = useState(null)
     const [dropdownOpen, setDropdownOpen] = useState(false)
@@ -108,7 +108,7 @@ function PostCard() {
     <div>
         {post?.map((po)=>(
             <Card>                  
-                <div className="flex gap-3">
+                <div className="flex gap-3 mb-3">
                     <div>
                         <Link>
                             <Avatar urls={po.user.image}/>
