@@ -5,12 +5,12 @@ import {FiUsers} from "react-icons/fi"
 function SideBarList({toggle}){
     return(
         <div className="">
-            <div className="sidebar">
+            {/* <div className="sidebar">
                 <div className="flex">
                     <RxDashboard className="mr-8 text-[1.7rem]"/>
                     <h2 className={`${toggle ? "opacity-0 delay-200" : ""} text-[1rem]  whitespace-pre`}>Dashboard</h2>
                 </div>      
-            </div>
+            </div> */}
             <div className="sidebar">
                 <div className="flex">
                     <FiUsers className="mr-8 text-[1.7rem]"/>

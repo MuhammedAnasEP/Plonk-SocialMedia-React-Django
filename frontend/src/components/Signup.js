@@ -117,10 +117,14 @@ function Signup() {
         }
     }
 
+    const clearErrors = () =>{
+        setErrors({})
+    }
+
     return (
         <div>
             <section className="bg-gray-75 min-h-screen flex items-center justify-center">
-                <div className="bg-[#E3EBF8] rounded-2xl p-5 items-center flex max-w-5xl p-5 shadow-xl">
+                <div className="bg-[#E3EBF8] rounded-2xl p-5 items-center flex max-w-5xl p-5 shadow-xl h-[650px]">
                     <div className="lg:px-16 lg:w-3/4">
                         <h2 className="font-bold text-2xl text-[#5B6484]">Signup</h2>
                         <p className="text-xs mt-4 text-[#5B6484]">Welcome to Plonk!</p>
@@ -190,7 +194,7 @@ function Signup() {
                             Signup with Google
                         </button> */}
 
-                        <div className="mt-3 text-xs flex justify-between items-center text-[#5B6484] border-t  border-[#5B6484] py-4 mt-7">
+                        <div onClick={clearErrors} className="mt-3 text-xs flex justify-between items-center text-[#5B6484] border-t  border-[#5B6484] py-4 mt-7">
                             <p>Already have account ?</p>
                             <Link to='/login'><button className="bg-white border rounded-xl py-2 px-5 hover:scale-105 duration-300">Login</button></Link>
                         </div>

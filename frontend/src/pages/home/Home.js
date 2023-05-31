@@ -1,7 +1,7 @@
 import Layout from "../../components/Layout"
-import PostFormCard from "../../components/PostFormCard"
-import PostCard from "../../components/PostCard"
-import AddFriendCard from "../../components/AddFriendCard"
+import PostFormCard from "../../components/home/PostFormCard"
+import PostCard from "../../components/home/PostCard"
+import AddFriendCard from "../../components/home/AddFriendCard"
 
 function Home() {
     return (

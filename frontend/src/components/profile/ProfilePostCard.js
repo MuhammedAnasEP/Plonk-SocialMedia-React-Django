@@ -1,10 +1,10 @@
 import { useState, useContext, useEffect } from "react"
-import Card from "./Card"
-import Avatar from "./Avatar"
+import Card from "../Card"
+import Avatar from "../Avatar"
 import { Link } from "react-router-dom"
-import AuthContext from "../context/AuthContex"
-import { comments, getcomments, getlike, getpost, getsavedpost, like, savepost, getuser, editpost, deletepost, deletecomment } from "../Constants/Constants"
-import axios from "../Axios"
+import AuthContext from "../../context/AuthContex"
+import { comments, getcomments, getlike, getpost, getsavedpost, like, savepost, getuser, editpost, deletepost, deletecomment } from "../../Constants/Constants"
+import axios from "../../Axios"
 import Swal from 'sweetalert2'
 import moment from 'moment';
 
@@ -12,20 +12,23 @@ function PostCard() {
     const [post,setPost] = useState(null)
     const [oldComments,setOldCommets] = useState(null)
     const [dropdownOpen, setDropdownOpen] = useState(false)
-    const [comment, setComment] = useState("")
+    const [comment, setComment] = useState(null)
     const [likes, setLikes] = useState(null)
     const [savedposts, setSavedPosts] = useState(null)
     const [profile,setProfile] = useState()
     const {user} = useContext(AuthContext)
     const [modal,setModal] = useState(false)
-    const [newPost, setNewPost] = useState()
+    const [newPost, setNewPost] = useState(null)
     const [editImage, setEditImage] = useState()
     const [editId, setEditId] = useState()
     const [editDes, setDes] = useState()
     const [commentModal, setCommentModal] = useState(false)
     const [postId, setPostId] = useState()
     const [postImageUrl, setPostImgaeUrl] = useState()
-    console.log(oldComments)
+    const [postUsername, setPostUsername] = useState()
+    const [postUserProfile, setPostUserProfile] = useState()
+    console.log(editImage);
+
 
 
    useEffect(()=>{
@@ -49,6 +52,8 @@ function PostCard() {
        axios.post(comments,JSON.stringify({"user": user_id, "post": post_id, "comment": comment}),{headers:{
            'Content-Type' : 'application/json'
         }}).then((respone)=>{
+            console.log(comment)
+            setComment("")
             getComments()
         })
     }
@@ -56,6 +61,7 @@ function PostCard() {
     function getComments(){
      axios.get(getcomments).then((respone)=>{
          setOldCommets(respone.data)
+         console.log('oldcommentcout',respone.data)
      })
     }
 
@@ -107,7 +113,7 @@ function PostCard() {
 
     function getUser(){
         axios.post(getuser,JSON.stringify({"user_id":user.user_id}),{headers:{'Content-Type' : 'application/json'}}).then((respone)=>{
-                    setProfile(respone.data.image)
+            setProfile(respone.data.image)
         })
     }
 
@@ -132,12 +138,10 @@ function PostCard() {
     function editPost(e){
         e.preventDefault()
         const formdata = new FormData();
-        if(newPost){
-            formdata.append('image',newPost)
-            formdata.append('description',editDes)
-        }
         if (!newPost){
-            formdata.append('image',editImage)
+            formdata.append('description',editDes)
+        }else{
+            formdata.append('image',newPost)
             formdata.append('description',editDes)
         }
         axios.put(editpost+editId,formdata).then((respone)=>{
@@ -170,10 +174,12 @@ function PostCard() {
         })
     }
 
-    function toggleCommentModal(id, url){
+    function toggleCommentModal(id, url, username, userpro){
         setCommentModal(!commentModal)
         setPostId(id)
         setPostImgaeUrl(url)
+        setPostUsername(username)
+        setPostUserProfile(userpro)
     }
     if (commentModal) {
         document.body.style.overflow = 'hidden';
@@ -291,11 +297,11 @@ function PostCard() {
                                 </svg>
                                 72
                             </button> */}
-                            <button className="flex gap-2 items-center">
+                            {/* <button className="flex gap-2 items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
                                 </svg>
-                            </button>
+                            </button> */}
                         </div>
                         <div className="">
                             {savedposts?.map((data)=>(
@@ -326,13 +332,13 @@ function PostCard() {
                         </div>
                         <div className="flex w-[87%] h-8 text-center overflow-hidden">                
                             <div className="w-[87%]">
-                                <textarea onChange={(e)=>{setComment(e.target.value)}} className="block w-[92%] py-1 outline-none overflow-hidden" placeholder="Leave a comment" />
+                                <textarea onChange={(e)=>{setComment(e.target.value)}} value={comment} className="block w-[92%] py-1 outline-none overflow-hidden" placeholder="Leave a comment" />
                             </div>
                         </div>
-                        <button onClick={()=>{addComment(user.user_id, po.id)}} className="top-0 text-blue-500 font-bold">Post</button>
+                        {comment && <button onClick={()=>{addComment(user.user_id, po.id)}} className="top-0 text-blue-500 font-bold">Post</button>}
                     </div>
 
-                    <span onClick={()=>{toggleCommentModal(po.id, po.image)}} className="text-sm text-gray-500 cursor-pointer">Show all comments</span>
+                    <span onClick={()=>{toggleCommentModal(po.id, po.image, po.user.username, po.user.image)}} className="text-sm text-gray-500 cursor-pointer">Show all comments</span>
 
                     {/* {oldComments?.map((comm)=>(
                         <div>{comm.post === po.id && comm.comment }</div>
@@ -359,9 +365,14 @@ function PostCard() {
                             {newPost ? <img className="rounded-md" src={URL.createObjectURL(newPost)} /> : <img className="rounded-md" src={'http://127.0.0.1:8000/'+editImage}/>}
                         </div>
                         <form onSubmit={editPost}>
-                           <div className="relative">
-                                <button className="bg-black text-white px-3 py-1 rounded-md mt-2">Change</button>
-                                <input onChange={(e)=>setNewPost(e.target.files[0])} type="file" className="absolute top-2 left-0 w-[78px] opacity-0"/>
+                           <div className="flex gap-4" >
+                                <div className="relative">
+                                    <button className="bg-black text-white px-3 py-1 rounded-md mt-2">Change</button>
+                                    <input onChange={(e)=>setNewPost(e.target.files[0])} type="file" className="absolute top-2 left-0 w-[78px] opacity-0"/>
+                                </div>
+                                {/* <div>
+                                    <button className="bg-black text-white px-3 py-1 rounded-md mt-2">Remove</button>
+                                </div> */}
                            </div>
                             <textarea onChange={(e)=>setDes(e.target.value)} placeholder="Descrioption" value={editDes} className="w-[100%] border-2 rounded-md mt-2 outline-0"/>
                             <button className="bg-black text-white px-3 py-1 rounded-md mt-2 ml-[80%] hover:bg-gray-800">Submit</button>
@@ -375,7 +386,7 @@ function PostCard() {
             <div className=" w-[1350px] h-screen bg-gray-300 opacity-[70%]"></div>
             <div className="w-full h-full absolute flex justify-center items-center top-0">
                 
-                <Card className="">
+                <Card className="" >
                     <div className="w-[800px] flex gap-2">
                         <div className="w-1/2">
                             {/* <div className="flex justify-between border-b border-gray-200 -mx-4 px-4 mb-2">
@@ -392,8 +403,8 @@ function PostCard() {
                         </div>
                         <div className="relative h-[400px] w-[400px] rounded-md flex flex-col w-1/2">
                             <div className="w-[365px] ml-1 h-[20px] bg-white border-b py-6 flex items-center -mt-1 gap-3 fixed">
-                                <Avatar size = 'medium' />
-                                <h2 className="font-bold">User name</h2>
+                                <Avatar size = 'medium' urls={postUserProfile}/>
+                                <h2 className="font-bold">{postUsername}</h2>
                             </div>
                             <div className="bg-white py-3 px-2 mt-10 overflow-y-scroll" >
                             {oldComments.map((comments)=>(

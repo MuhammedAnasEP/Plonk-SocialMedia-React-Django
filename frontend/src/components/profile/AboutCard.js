@@ -1,15 +1,17 @@
-import Card from "./Card";
-import { getuser } from "../Constants/Constants";
+import Card from "../Card";
+import { getuser } from "../../Constants/Constants";
 import { useContext, useEffect, useState } from "react";
-import axios from '../Axios'
-import AuthContext from "../context/AuthContex";
+import axios from '../../Axios'
+import AuthContext from "../../context/AuthContex";
 
-function AboutCard() {
+function AboutCard(id) {
     const {user} = useContext(AuthContext)
     const [about, setAbout] = useState()
+
     useEffect(()=>{
         getUser()
     },[])
+
     function getUser() {
         axios.post(getuser, JSON.stringify({ "user_id": user.user_id }), { headers: { 'Content-Type': 'application/json' } }).then((respone) => {
             setAbout(respone.data.about)

@@ -41,3 +41,14 @@ class Notifications(models.Model):
     receiver = models.ForeignKey(User, related_name="reciver", on_delete=models.CASCADE)
     message = models.CharField()
     created = models.DateTimeField(default=timezone.now)
+
+class Chats(models.Model):
+    sender = models.ForeignKey(User, related_name='chat_sender', on_delete=models.CASCADE)
+    receiver = models.ForeignKey(User, related_name='chat_receiver', on_delete=models.CASCADE)
+
+class Messages(models.Model):
+    chat = models.ForeignKey(Chats, on_delete=models.CASCADE)
+    sender = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.CharField()
+    date = models.DateTimeField(default=timezone.now)
+    is_read = models.BooleanField(default=False)

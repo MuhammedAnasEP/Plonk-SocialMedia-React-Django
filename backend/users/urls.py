@@ -24,5 +24,14 @@ urlpatterns = [
     path('editpost/<int:id>',views.editPost),
     path('deletepost/<int:id>',views.deletePost),
     path('deletecomment/<int:id>',views.deleteComment),
-    path('follow/<int:id>',views.Follow)
+    path('follow/<int:id>',views.Follow),
+    path('friendslist/',views.FriendsList),
+    path('addchat/<int:sender>/<int:receiver>',views.addChat),
+    path('getchat/<int:id>',views.getChats),
+    path('sendmessage/<int:sender>/<int:receiver>',views.sendMessage),
+    path('getonechat/<int:sender>/<int:receiver>',views.getOneChat),
+    path('getmessages/<int:id>',views.getMessages),
+    path('getfollowings/<int:id>',views.getFollowings),
+    path('savedpost/<int:id>',views.savedPosts),
+    path('getnotifications/<int:id>',views.getNotifications)
 ]

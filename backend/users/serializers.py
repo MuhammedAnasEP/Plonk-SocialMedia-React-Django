@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User,Post,Comment,Like,SavedPosts
+from .models import User,Post,Comment,Like,SavedPosts,Friend,Chats,Messages,Notifications
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,6 +26,31 @@ class LikeSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class SavedSerializer(serializers.ModelSerializer):
+    post = PostSerializer()
+    user = UserSerializer()
     class Meta:
         model = SavedPosts
         fields = '__all__'
+
+class FriendsSeriazer(serializers.ModelSerializer):
+    user = UserSerializer()
+    follow_user = UserSerializer()
+    class Meta:
+        model = Friend
+        fields = '__all__'
+
+class ChatSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Chats
+        fields = "__all__"
+
+class MessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Messages
+        fields = "__all__"
+
+class NotificationSerializer(serializers.ModelSerializer):
+    sender = UserSerializer()
+    class Meta:
+        model = Notifications
+        fields = "__all__"

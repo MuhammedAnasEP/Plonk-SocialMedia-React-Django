@@ -4,9 +4,9 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from .models import User,Post,Comment,Like,SavedPosts,Friend,Notifications
-from .serializers import UserSerializer,PostSerializer,CommentSerializer,LikeSerializer,SavedSerializer
-from rest_framework import status,serializers
+from .models import User,Post,Comment,Like,SavedPosts,Friend,Notifications,Chats,Messages
+from .serializers import UserSerializer,PostSerializer,CommentSerializer,LikeSerializer,SavedSerializer,FriendsSeriazer,ChatSerializer,MessageSerializer,NotificationSerializer
+from rest_framework import status
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate
 
@@ -180,9 +180,13 @@ def changePassword(request,id):
 @api_view(['PUT'])
 def editPost(request, id):
     post = Post.objects.get(id = id)
-    post.image = request.data['image']
-    post.description = request.data['description']
-    post.save()
+    try:
+        post.image = request.data['image']
+        post.description = request.data['description']
+        post.save()
+    except:
+        post.description = request.data['description']
+        post.save()
 
     return Response("Post Edited")
 
@@ -203,7 +207,6 @@ def Follow(request, id):
     user = User.objects.get(id=id)
     too = request.data['to']
     to = User.objects.get(id=too)
-    print("--------------------->")
     
     follow = Friend.objects.create(user = user, follow_user = to)
     follow.save()
@@ -214,3 +217,71 @@ def Follow(request, id):
     notification.save()
 
     return Response("Followed")
+
+@api_view(['GET'])
+def FriendsList(request):
+    friends = Friend.objects.all()
+    serialize = FriendsSeriazer(friends, many=True)
+    return Response(serialize.data)
+
+@api_view(['POST'])
+def addChat(request,sender,receiver):
+    try:
+        send_user = User.objects.get(id = sender)
+        receiver_user = User.objects.get(id = receiver)
+        chat = Chats.objects.get(sender = send_user, receiver = receiver_user)
+        serialize = ChatSerializer(chat, many = False)
+        return Response(serialize.data)
+
+    except:
+        send_user = User.objects.get(id = sender)
+        receiver_user = User.objects.get(id = receiver)
+        chat = Chats.objects.create(sender = send_user, receiver = receiver_user)
+        chat.save()
+        serialize = ChatSerializer(chat, many = False)
+        return Response(serialize.data)
+
+@api_view(['GET'])
+def getChats(request, id):
+    chats = Chats.objects.filter(sender = id)
+    serialize = ChatSerializer(chats, many = True)
+    return Response(serialize.data)
+
+@api_view(['POST'])
+def sendMessage(request, sender, receiver):
+    chat = Chats.objects.get(sender = sender, receiver = receiver)
+    sender = User.objects.get(id = sender)
+    content = request.data['message']
+    message = Messages.objects.create(chat = chat, sender = sender, content = content)
+    message.save()
+    return Response("Success")
+
+@api_view(['GET'])
+def getOneChat(request, sender, receiver):
+    chat = Chats.objects.get(sender = sender, receiver = receiver)
+    serialze = ChatSerializer(chat, many = False)
+    return Response(serialze.data)
+
+@api_view(['GET'])
+def getMessages(request, id):
+    message = Messages.objects.filter(chat = id)
+    serialze = MessageSerializer(message, many = True)
+    return Response(serialze.data)
+
+@api_view(['GET'])
+def getFollowings(request, id):
+    followng = Friend.objects.filter(user = id)
+    serialze = FriendsSeriazer(followng, many = True)
+    return Response(serialze.data)
+
+@api_view(['GET'])
+def savedPosts(request, id):
+    saved = SavedPosts.objects.filter(user = id)
+    serialize = SavedSerializer(saved, many = True)
+    return Response(serialize.data)
+
+@api_view(['GET'])
+def getNotifications(request, id):
+    notificatios = Notifications.objects.filter(receiver = id)
+    serialize = NotificationSerializer(notificatios, many = True)
+    return Response(serialize.data)

@@ -2,16 +2,41 @@ import { Link, useLocation } from "react-router-dom"
 import Layout from "../../components/Layout"
 import Card from "../../components/Card"
 import Avatar from "../../components/Avatar"
-import ProfilePostCard from "../../components/ProfilePostCard"
-import AboutCard from "../../components/AboutCard"
-import FriendsCard from "../../components/FriendsCard"
-import EditProfile from "../../components/EditProfile"
+import ProfilePostCard from '../../components/profile/ProfilePostCard'
+import AboutCard from "../../components/profile/AboutCard"
+import FriendsCard from "../../components/profile/FriendsCard"
+import EditProfile from "../../components/profile/EditProfile"
+import { useContext, useEffect, useState } from "react"
+import AuthContext from "../../context/AuthContex"
+import { getuser } from "../../Constants/Constants"
+import axios from '../../Axios'
 // import PhotosCard from "../../components/PhotosCard"
+
 function Profile() {
     const location = useLocation()
     const {pathname} = location
+    const {user} =useContext(AuthContext)
+    const [userProfile,setUserPofile] = useState()
+    const [username,setUsername] = useState()
+    const [userFirstname, setUserFirstname] = useState()
+    const [userLastname, setUserLastname] = useState()
+    
+    
     const tabClasses = 'flex gap-1 px-4 py-1 items-center border-b-4 border-b-white';
     const activeTabClasses = 'flex gap-1 px-4 py-1 items-center border-socialBlue border-b-4 text-socialBlue font-bold';
+
+    useEffect(()=>{
+        getUser()
+    },[])
+
+    function getUser(){
+        axios.post(getuser,JSON.stringify({"user_id":user.user_id}),{headers:{'Content-Type' : 'application/json'}}).then((respone)=>{
+            setUserPofile(respone.data.image)
+            setUsername(respone.data.username)
+            setUserFirstname(respone.data.first_name)
+            setUserLastname(respone.data.last_name)
+        })
+    }
 
     return (
         <div>
@@ -23,13 +48,13 @@ function Profile() {
                             <img className="w-full" src="https://images.unsplash.com/photo-1682965636984-e5e8c00197bb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80" alt="" />
                         </div>
                         <div className="absolute top-24 left-4">
-                            <Avatar size='large' />
+                            <Avatar size='large' urls = {userProfile}/>
                         </div>
                         <div className="p-4 pb-0">
                             <div className="flex items-center">
                                 <div className="ml-40">
-                                    <h2 className="text-3xl font-bold">Jhon Doe</h2>
-                                    <div className="text-gray-500 leading-4">Jhon Doe, full name</div>
+                                    <h2 className="text-3xl font-bold">{username}</h2>
+                                    <div className="text-gray-500 leading-4">{userFirstname}, {userLastname}</div>
                                 </div>
                                 <div className="ml-10">
                                     <Link to='/profile/edit'><button className="bg-gray-800 px-2 text-white font-bold rounded-lg hover:bg-gray-500">Edit Profile</button></Link>

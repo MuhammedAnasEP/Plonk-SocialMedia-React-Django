@@ -6,7 +6,13 @@ import AuthContext from '../context/AuthContex'
 
 function Login() {
     let {loginUser} = useContext(AuthContext)
-    let {user, errors} = useContext(AuthContext)
+    let {user, errors, setErrors} = useContext(AuthContext)
+    console.log(errors)
+
+    const clearErrors = () =>{
+        setErrors({})
+    }
+    
     return (
         <div>
             <section className="bg-gray-75 min-h-screen flex items-center justify-center">
@@ -35,7 +41,7 @@ function Login() {
                         <div className="flex justify-center text-xs mt-3 border-b border-[#5B6484] py-4 text-[#5B6484]">
                             <a>Forgot your password ?</a>
                         </div>
-                        <div className="mt-3 text-xs flex justify-between items-center text-[#5B6484]">
+                        <div onClick={clearErrors} className="mt-3 text-xs flex justify-between items-center text-[#5B6484]">
                             <p>Don't have an account ?</p>
                             <Link to='/signup'><button className="bg-white border rounded-xl py-2 px-5 hover:scale-105 duration-300">Register</button></Link>
                         </div>

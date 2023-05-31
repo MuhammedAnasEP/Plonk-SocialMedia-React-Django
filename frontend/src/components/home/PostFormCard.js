@@ -1,11 +1,11 @@
 import { useState, useContext, useEffect } from "react";
-import axios from '../Axios'
-import Avatar from "./Avatar";
-import Card from "./Card";
-import AuthContext from "../context/AuthContex";
-import { baseUrl, postimage } from "../Constants/Constants";
+import axios from '../../Axios'
+import Avatar from "../Avatar";
+import Card from "../Card";
+import AuthContext from "../../context/AuthContex";
+import { baseUrl, postimage } from "../../Constants/Constants";
 import Swal from "sweetalert2";
-import { getuser } from "../Constants/Constants";
+import { getuser } from "../../Constants/Constants";
 
 
 function PostFormCard() {
@@ -46,7 +46,7 @@ function PostFormCard() {
     }
     function getUser(){
         axios.post(getuser,JSON.stringify({"user_id":user.user_id}),{headers:{'Content-Type' : 'application/json'}}).then((respone)=>{
-                    setProfile(respone.data.image)
+            setProfile(respone.data.image)
         })
     }
 

@@ -7,8 +7,10 @@ import Profile from './pages/profile/Profile';
 import PrivateRoute from './utils/PrivateRoute';
 import { AuthProvider } from './context/AuthContex';
 import Saved from './pages/saved/Saved';
-import Notifications from './pages/Notifications/Notifications';
-import EditProfile from './components/EditProfile';
+import Notifications from './pages/notifications/Notifications'
+import EditProfile from './components/profile/EditProfile'
+import Message from './pages/message/Message';
+import FriendProfile from './pages/friendProfile/friendProfile';
 
 function App() {
   return (
@@ -24,11 +26,17 @@ function App() {
                     <Route path='about' element={<Profile/>}/>
                     <Route path='edit' element={<EditProfile/>}/>
                   </Route>
+                  <Route path='/friendprofile/:userId' element={<FriendProfile/>}/>
+                  <Route path='/friendprofile/posts/:userId' element={<FriendProfile/>}/>
+                  <Route path='/friendprofile/friends/:userId' element={<FriendProfile/>}/>
+                  <Route path='/friendprofile/about/:userId' element={<FriendProfile/>}/>
+                  <Route path="/saved" element = {<Saved/>}/>
+                  <Route path="/notifications" element = {<Notifications/>}/>
+                  {/* <Route path="/messages" element = {<Message/>}/>
+                  <Route path="/messages/:sender/:receiver" element = {<Message/>}/> */}
                 </Route>
                 <Route path='/login'  element = {<Login/>}/>
                 <Route path="/signup" element = {<Signup/>}/>
-                <Route path="/saved" element = {<Saved/>}/>
-                <Route path="/notifications" element = {<Notifications/>}/>
             </Routes>
           </AuthProvider>
       </BrowserRouter>

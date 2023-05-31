@@ -1,16 +1,15 @@
-import Card from "./Card";
-import { json, useNavigate } from "react-router-dom";
+import Card from "../Card";
 import { useContext, useEffect, useState } from "react";
-import AuthContext from "../context/AuthContex";
-import axios from '../Axios';
-import { changepassword, editprofile, getuser } from "../Constants/Constants";
+import AuthContext from "../../context/AuthContex";
+import axios from '../../Axios';
+import { changepassword, editprofile, getuser } from "../../Constants/Constants";
 import Swal from "sweetalert2";
 
 function EditProfile(){
     
     const {user} = useContext(AuthContext)
-    const [profileImage,setProfileImage] = useState()
     const [oldProfileImage,setOldProfileImage] = useState()
+    const [profileImage,setProfileImage] = useState()
     const [firstname,setFirstname] = useState()
     const [lastname,setLastname] = useState()
     const [username,setUsername] = useState()
@@ -20,7 +19,6 @@ function EditProfile(){
     const [currentPassword,setCurrentPassword] = useState()
     const [newPassword,setNewPassword] = useState()
     const [Cpassword,setCPassword] = useState()
-    const navigate = useNavigate();
 
     useEffect(()=>{
         getUser()
@@ -34,7 +32,15 @@ function EditProfile(){
         formdata.append('username',username)
         formdata.append('email',email)
         formdata.append('about',about)
-        formdata.append('profileImage',profileImage)
+        if(profileImage === 'undefined'){
+            formdata.append('profileImage',oldProfileImage)    
+        }
+        else if(!oldProfileImage && !profileImage){
+            formdata.append('profileImage','')
+        }
+        else{
+            formdata.append('profileImage',profileImage)
+        }
         
         let err = profileValidate()
         if(err !== false){
@@ -51,7 +57,6 @@ function EditProfile(){
                 timer: 1000,
             });
             }).catch((error)=>{
-                console.log("errrrr",error.response.status)
                 if(error.response.status === 406){
                     setValidationErrors({email:error.response.data})
                 }
@@ -110,7 +115,6 @@ function EditProfile(){
             setUsername(respone.data.username)
             setEmail(respone.data.email)
             setOldProfileImage(respone.data.image)
-            setOldProfileImage(respone.data.image)             
         })
     }
 
@@ -221,11 +225,17 @@ function EditProfile(){
                             <input onChange={(e)=>{setEmail(e.target.value)}} value={email} className="border rounded-xl p-1 outline-none " placeholder="email"/>
                         </div>
                         <span className="text-red-600 text-[12px] ml-[10%]  -mt-5 mb-5 ">{validationErrors.email}</span>
-
-                        <div className="flex gap-12 mb-5 items-center">
+                        {
+                            about ? 
+                            <div className="flex gap-12 mb-5 items-center">
                                 <label className="font-bold">About</label>
                                 <textarea onChange={(e)=>{setAbout(e.target.value)}} value={about} className="border rounded-xl p-1 outline-none" placeholder="About"></textarea>
-                        </div>
+                            </div>:
+                            <div className="flex gap-12 mb-5 items-center">
+                                <label className="font-bold">About</label>
+                                <textarea onChange={(e)=>{setAbout(e.target.value)}} className="border rounded-xl p-1 outline-none" placeholder="About"></textarea>
+                            </div>
+                        }
                         <span className="text-red-600 text-[12px] ml-[10%]  -mt-5 mb-5 ">{validationErrors.about}</span>
 
                         <div className="mb-5 mt-2 -ml-10">
