@@ -20,26 +20,30 @@ function FriendsCard(){
         setFollowingList(respone.data)
         })
     }
+
+    const Unfollow = (id,follow) =>{
+    }
+
     return (
         <Card>
             <h2 className="text-3xl mb-4 font-bold">Friends</h2>   
             {
-                followingList?.map((data)=>(
-                    user.user_id === data.user.id &&(
-                <div className="flex border-b p-4 -mx-4 items-center justify-between">
-                   <Link to={`/friendprofile/${data.follow_user.id}`}>
-                        <div className="flex items-center gap-2">
-                            <Avatar size='medium' urls={data.follow_user.image}/>
-                            <div>
-                                <h3 className="font-bold text-lg">{data.follow_user.username}</h3> 
-                            </div>
+            followingList?.map((data,index)=>(
+            user.user_id === data.user.id &&(
+            <div key={index} className="flex border-b p-4 -mx-4 items-center justify-between">
+                <Link to={`/friendprofile/${data.follow_user.id}`}>
+                    <div className="flex items-center gap-2">
+                        <Avatar size='medium' urls={data.follow_user.image}/>
+                        <div>
+                            <h3 className="font-bold text-lg">{data.follow_user.username}</h3> 
                         </div>
-                   </Link>
-                    <div>
-                        <button className="bg-gray-300 hover:bg-gray-400 px-3 rounded-md font-bold">Unfollow</button>
                     </div>
-                </div>)
-                ))
+                </Link>
+                <div>
+                    <button onClick={()=>{Unfollow(user.user_id, data.follow_user.id)}} className="bg-gray-300 hover:bg-gray-400 px-3 rounded-md font-bold">Unfollow</button>
+                </div>
+            </div>)
+            ))
             }        
         </Card>
     )

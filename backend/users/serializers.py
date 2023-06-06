@@ -21,6 +21,8 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class LikeSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    post = PostSerializer()
     class Meta:
         model = Like
         fields = '__all__'

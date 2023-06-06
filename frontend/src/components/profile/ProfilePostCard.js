@@ -1,11 +1,11 @@
-import { useState, useContext, useEffect } from "react"
-import Card from "../Card"
-import Avatar from "../Avatar"
-import { Link } from "react-router-dom"
-import AuthContext from "../../context/AuthContex"
-import { comments, getcomments, getlike, getpost, getsavedpost, like, savepost, getuser, editpost, deletepost, deletecomment } from "../../Constants/Constants"
-import axios from "../../Axios"
-import Swal from 'sweetalert2'
+import { useState, useContext, useEffect } from "react";
+import Card from "../Card";
+import Avatar from "../Avatar";
+import { Link } from "react-router-dom";
+import AuthContext from "../../context/AuthContex";
+import { comments, getcomments, getlike, getpost, getsavedpost, like, savepost, getuser, editpost, deletepost, deletecomment } from "../../Constants/Constants";
+import axios from "../../Axios";
+import Swal from 'sweetalert2';
 import moment from 'moment';
 
 function PostCard() {
@@ -27,7 +27,6 @@ function PostCard() {
     const [postImageUrl, setPostImgaeUrl] = useState()
     const [postUsername, setPostUsername] = useState()
     const [postUserProfile, setPostUserProfile] = useState()
-    console.log(editImage);
 
 
 
@@ -52,7 +51,6 @@ function PostCard() {
        axios.post(comments,JSON.stringify({"user": user_id, "post": post_id, "comment": comment}),{headers:{
            'Content-Type' : 'application/json'
         }}).then((respone)=>{
-            console.log(comment)
             setComment("")
             getComments()
         })

@@ -16,6 +16,7 @@ function PostFormCard() {
 
     const { user } = useContext(AuthContext)
     const [image, setImage] = useState()
+    const [indi, setIndi] = useState(false)
     const [description, setDescription] = useState("")
     const [profile,setProfile] = useState()
     const user_id = user.user_id
@@ -34,6 +35,7 @@ function PostFormCard() {
             if (response.status === 200) {
                 setImage("")
                 setDescription("")
+                setIndi(false)
                 Swal.fire({
                     position: "center",
                     type: "success",
@@ -68,7 +70,7 @@ function PostFormCard() {
                             </svg>
                             <span className="mt-1">Post</span>
                         </button>
-                        <input onChange={(e) => { setImage(e.target.files[0]) }} name="image" type="file" className=" w-[60px] absolute top-0 opacity-0" />
+                        <input onChange={(e) => { setImage(e.target.files[0]);setIndi(true) }} name="image" type="file" className=" w-[60px] absolute top-0 opacity-0" />
                     </div>
                     {/* <div>
                         <button className="flex gap-1">
@@ -87,9 +89,11 @@ function PostFormCard() {
                             Mood
                         </button>
                     </div> */}
+                    {description || indi && 
                     <div className="grow text-right">
                         <button className="bg-socialBlue text-white px-6 py-0.5 rounded-md">Share</button>
                     </div>
+                    }
                 </div>
             </form>
         </Card>

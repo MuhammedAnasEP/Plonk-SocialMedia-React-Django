@@ -285,3 +285,11 @@ def getNotifications(request, id):
     notificatios = Notifications.objects.filter(receiver = id)
     serialize = NotificationSerializer(notificatios, many = True)
     return Response(serialize.data)
+
+@api_view(['PUT'])
+def Unfollow(request, id):
+    follow = request.data['follow']
+    follow_user = User.objects.get(id = follow)
+    friend = Friend.objects.filter(user = id, follow_user = follow_user)
+    friend.delete()
+    return Response('Done')

@@ -1,22 +1,27 @@
-import { useState, useContext, useEffect } from "react"
-import Card from "../Card"
-import Avatar from "../Avatar"
-import { Link } from "react-router-dom"
-import ClickOutHandler from "react-clickout-handler"
-import AuthContext from "../../context/AuthContex"
-import {comments, getcomments, getlike, getpost, getsavedpost, like, savepost, getuser, getfollowings } from "../../Constants/Constants"
-import axios from "../../Axios"
+import { useState, useContext, useEffect } from "react";
+import Card from "../Card";
+import Avatar from "../Avatar";
+import { Link } from "react-router-dom";
+import AuthContext from "../../context/AuthContex";
+import {comments, getcomments, getlike, getpost, getsavedpost, like, savepost, getuser, getfollowings, deletecomment } from "../../Constants/Constants";
+import axios from "../../Axios";
+import moment from 'moment';
+import Swal from 'sweetalert2';
 
 
-function PostCard(active) {
+function PostCard() {
     const [post,setPost] = useState(null)
     const [oldComments,setOldCommets] = useState(null)
-    const [dropdownOpen, setDropdownOpen] = useState(false)
-    const [comment, setComment] = useState("")
+    const [commentModal, setCommentModal] = useState(false)
+    const [comment, setComment] = useState(null)
     const [likes, setLikes] = useState(null)
     const [savedposts, setSavedPosts] = useState(null)
     const [profile,setProfile] = useState()
     const [following, setFollowing] = useState()
+    const [postId, setPostId] = useState()
+    const [postImageUrl, setPostImgaeUrl] = useState()
+    const [postUsername, setPostUsername] = useState()
+    const [postUserProfile, setPostUserProfile] = useState()
     const {user} = useContext(AuthContext)
     console.log('data',following);
     console.log('po',post)
@@ -44,6 +49,7 @@ function PostCard(active) {
        axios.post(comments,JSON.stringify({"user": user_id, "post": post_id, "comment": comment}),{headers:{
            'Content-Type' : 'application/json'
         }}).then((respone)=>{
+            setComment("")
             getComments()
         })
     }
@@ -52,6 +58,23 @@ function PostCard(active) {
      axios.get(getcomments).then((respone)=>{
          setOldCommets(respone.data)
      })
+    }
+
+    function deleteComment(id){
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Delete'
+        }).then((result)=>{
+            if (result.value){
+                axios.put(deletecomment+id).then((respone)=>{
+                    getComments()
+                })
+            }
+        })
     }
 
     function Like(user,post){
@@ -112,6 +135,14 @@ function PostCard(active) {
         })
     }
 
+    function toggleCommentModal(id, url, username, userpro){
+        setCommentModal(!commentModal)
+        setPostId(id)
+        setPostImgaeUrl(url)
+        setPostUsername(username)
+        setPostUserProfile(userpro)
+    }
+
     return (
     <div>
         {post?.map((po)=>(
@@ -120,15 +151,15 @@ function PostCard(active) {
             <Card>  
                 <div className="flex gap-3 mb-3">
                     <div>
-                        <Link>
+                        <Link to={`/friendprofile/${po.user.id}`}>
                             <Avatar urls={po.user.image}/>
                         </Link>
                     </div>
                     <div className="grow">
-                        <Link to='/profile'><p><span className="font-semibold cursor-pointer hover:underline">{po.user.username}</span> Shared a <span className="text-socialBlue">post</span></p></Link>
-                        <p className="text-gray-500 text-sm">2 hours ago</p>
+                        <Link to={`/friendprofile/${po.user.id}`}><p><span className="font-semibold cursor-pointer hover:underline">{po.user.username}</span> Shared a <span className="text-socialBlue">post</span></p></Link>
+                        <p className="text-gray-500 text-sm">{moment.utc(po.date_posted).local().startOf('seconds').fromNow()}</p>
                     </div>
-                    <div className="relative">                  
+                    {/* <div className="relative">                  
                         <button className="text-gray-400" onClick={() => setDropdownOpen(true)}>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
@@ -165,7 +196,7 @@ function PostCard(active) {
                                 )}
                             </div>
                         </ClickOutHandler>
-                    </div>
+                    </div> */}
                 </div>
                 <div>
                     <p>{po.description}</p>
@@ -176,20 +207,17 @@ function PostCard(active) {
                 </div>
                 <div className="flex justify-between items-center">
                     <div className="mt-5 flex gap-8">
-                        {
-                        likes && likes.map((data)=>(
-                            data.user === user.user_id && po.id === data.post ?
+                        {likes && likes.map((data)=>(
+                            data.user.id === user.user_id && po.id === data.post.id ?
                             <button onClick={()=>{unLike(data.id)}} className="flex gap-2 items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="red" viewBox="0 0 24 24" strokeWidth={1.5} stroke="none" className="w-6 h-6">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-                                </svg>
-                                
+                                </svg>                       
                             </button>: <button onClick={()=>{Like(user.user_id,po.id)}} className="flex gap-2 items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-                                </svg>                                
-                            </button>                    
-                        ))
+                                </svg>                        
+                            </button>))
                         }
                         {likes && likes.length === 0 && <button onClick={()=>{Like(user.user_id,po.id)}} className="flex gap-2 items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -233,12 +261,64 @@ function PostCard(active) {
                     <button onClick={()=>{addComment(user.user_id, po.id)}} className="top-0 text-blue-500 font-bold">Post</button>
                 </div>
 
-                <span className="text-sm text-gray-500">Show all comments</span>
+                <span onClick={()=>{toggleCommentModal(po.id, po.image, po.user.username, po.user.image)}} className="text-sm text-gray-500 cursor-pointer">Show all comments</span>
             </Card>
-            ))
-        )
 
-        )}
+            ))))}
+        {commentModal && (
+        <div className="fixed top-0 left-0 modal">
+            <div className=" w-[1350px] h-screen bg-gray-300 opacity-[70%]"></div>
+            <div className="w-full h-full absolute flex justify-center items-center top-0">
+                
+                <Card className="" >
+                    <div className="w-[800px] flex gap-2">
+                        <div className="w-1/2">
+                            {/* <div className="flex justify-between border-b border-gray-200 -mx-4 px-4 mb-2">
+                                <h2 className="font-bold -mt-1">Edit Profile </h2>
+                                <svg onClick={toggleModal} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 -mt-1 mb-1">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div> */}
+                            <div>
+                                <div className="flex items-center justify-center overflow-hidden rounded-md">
+                                    <img className="rounded-md w-[400px] h-[400px]" src={'http://127.0.0.1:8000/'+postImageUrl} alt=""/>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="relative h-[400px] w-[400px] rounded-md flex flex-col w-1/2">
+                            <div className="w-[365px] ml-1 h-[20px] bg-white border-b py-6 flex items-center -mt-1 gap-3 fixed">
+                                <Avatar size = 'medium' urls={postUserProfile}/>
+                                <h2 className="font-bold">{postUsername}</h2>
+                            </div>
+                            <div className="bg-white py-3 px-2 mt-10 overflow-y-scroll" >
+                            {oldComments.map((comments)=>(
+                                
+                                postId === comments.post.id && (<div className="mt-4">
+                                    <div className="flex gap-2 items-center">
+                                        <Avatar size = 'small' urls={comments.user.image}/>
+                                        <h2 className="font-bold text-[12px]">{comments.user.username}</h2>
+                                        <p className="text-[11px] text-gray-500">{moment.utc(comments.comment_date).local().startOf('seconds').fromNow()}</p>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <p className="text-[12px] ml-7">{comments.comment}</p>
+                                        {comments.user.id === user.user_id &&
+                                        <svg onClick={()=>{deleteComment(comments.id)}} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-3 hover:cursor-pointer">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                                        </svg>}
+                                    </div>
+                                </div>)
+                            ))}
+                            </div>
+                        </div>
+                    </div>
+                </Card>
+            </div>    
+            <div className="absolute top-5 right-5 cursor-pointer">
+                <svg onClick={toggleCommentModal} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </div>
+        </div>)}
     </div>
     )
 }
