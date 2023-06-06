@@ -287,9 +287,7 @@ def getNotifications(request, id):
     return Response(serialize.data)
 
 @api_view(['PUT'])
-def Unfollow(request, id):
-    follow = request.data['follow']
-    follow_user = User.objects.get(id = follow)
+def Unfollow(request, id, follow_user):
     friend = Friend.objects.filter(user = id, follow_user = follow_user)
     friend.delete()
-    return Response('Done')
+    return Response('Unfollowed')

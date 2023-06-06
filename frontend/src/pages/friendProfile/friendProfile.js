@@ -10,6 +10,7 @@ import { useState, useEffect, useContext } from "react";
 import Post from "../../components/friendProfile/Post";
 import { addchat } from "../../Constants/Constants";
 import AuthContext from "../../context/AuthContex";
+import { unfollow } from "../../Constants/Constants";
 
 function FriendProfile() {
     const location = useLocation()
@@ -47,6 +48,10 @@ function FriendProfile() {
         })
     }
 
+    const Unfollow = (id, follow) => {
+        axios.put(unfollow + id + '/' + follow).then((respone) => {})
+    }
+
     return (
         <div>
             <Layout>
@@ -65,7 +70,7 @@ function FriendProfile() {
                                     <div className="text-gray-500 leading-4">{userFirstname} {userLastname}</div>
                                 </div>
                                 <div className="flex ml-10 gap-3">
-                                    <button className="bg-gray-700 px-2 py-1 text-white font-bold rounded-lg hover:bg-gray-500">Unfollow</button>
+                                    <button onClick={() => { Unfollow(user.user_id, id) }} className="bg-gray-700 px-2 py-1 text-white font-bold rounded-lg hover:bg-gray-500">Unfollow</button>
                                     {/* <button onClick={addChat} className="bg-gray-700 px-2 py-1 text-white font-bold rounded-lg hover:bg-gray-500">Message</button> */}
                                 </div>
                             </div>

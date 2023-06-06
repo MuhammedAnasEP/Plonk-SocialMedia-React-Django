@@ -33,5 +33,6 @@ urlpatterns = [
     path('getmessages/<int:id>',views.getMessages),
     path('getfollowings/<int:id>',views.getFollowings),
     path('savedpost/<int:id>',views.savedPosts),
-    path('getnotifications/<int:id>',views.getNotifications)
+    path('getnotifications/<int:id>',views.getNotifications),
+    path('unfollow/<int:id>/<int:follow_user>',views.Unfollow),
 ]
