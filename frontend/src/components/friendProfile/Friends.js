@@ -3,21 +3,28 @@ import Card from "../Card";
 import { useParams } from "react-router-dom";
 import Avatar from "../Avatar";
 import axios from '../../Axios';
-import { getfollownglist } from "../../Constants/Constants";
+import { getfollownglist, getuser } from "../../Constants/Constants";
 import { Link } from "react-router-dom";
 
 function Friends(id){
     const params = useParams()
     const [followingList, setFollowingList] = useState()
-    const [friend,setFriend] = useState(params.userId)
+    const [friend,setFriend] = useState()
   
     useEffect(()=>{
         getFollowngList()
+        getUserp()
     },[])
 
     function getFollowngList(){
         axios.get(getfollownglist).then((respone)=>{
         setFollowingList(respone.data)
+        })
+    }
+
+    function getUserp(){
+        axios.post(getuser,JSON.stringify({"user_id":params.userId}),{headers:{'Content-Type' : 'application/json'}}).then((respone)=>{
+            setFriend(respone.data.id)
         })
     }
     return (

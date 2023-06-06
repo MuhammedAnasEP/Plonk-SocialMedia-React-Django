@@ -5,9 +5,9 @@ from rest_framework.decorators import api_view
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .models import User,Post,Comment,Like,SavedPosts,Friend,Notifications,Chats,Messages
-from .serializers import UserSerializer,PostSerializer,CommentSerializer,LikeSerializer,SavedSerializer,FriendsSeriazer,ChatSerializer,MessageSerializer,NotificationSerializer
+from .serializers import UserSerializer,PostSerializer,CommentSerializer,LikeSerializer,SavedSerializer,FriendsSerializer,ChatSerializer,MessageSerializer,NotificationSerializer
 from rest_framework import status
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import authenticate
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -88,20 +88,24 @@ def getComments(request):
     return Response(serialize.data)
 
 @api_view(['POST'])
+def Unlike(request):
+    user=request.data['user']
+    post=request.data['post']
+    user_id = User.objects.get(id=user)
+    post_id = Post.objects.get(id=post)
+    likes=Like.objects.get(user = user_id, post = post_id)
+    likes.delete()
+    return Response("Unlikd")
+
+@api_view(['POST'])
 def Likes(request):
-    try:
-        id=request.data['liked_id']
-        likes=Like.objects.get(id=id)
-        likes.delete()
-        return Response("Unlikd")
-    except:
-        user = request.data['user']
-        post = request.data['post']        
-        user_id = User.objects.get(id=user)
-        post_id = Post.objects.get(id=post)        
-        likes = Like.objects.create(user = user_id, post = post_id)
-        likes.save()
-        return Response("Liked")
+    user = request.data['user']
+    post = request.data['post']        
+    user_id = User.objects.get(id=user)
+    post_id = Post.objects.get(id=post)        
+    likes = Like.objects.create(user = user_id, post = post_id)
+    likes.save()
+    return Response("Liked")
 
 @api_view(['GET'])
 def getLike(request):
@@ -125,6 +129,16 @@ def Save(request):
         saved.save()
         return Response("Saved")
     
+@api_view(['POST'])
+def Unsave(request):
+    user = request.data['user']
+    post = request.data['post']
+    user_id = User.objects.get(id=user)
+    post_id = Post.objects.get(id=post)
+    saved = SavedPosts.objects.get(user = user_id, post = post_id)
+    saved.delete()
+    return Response("Unsaved")
+
 @api_view(['GET'])
 def getSavedPosts(requests):
     saved = SavedPosts.objects.all()
@@ -168,10 +182,10 @@ def editProfile(request, id):
 
 @api_view(['PUT'])
 def changePassword(request,id):
-    currentPassword = make_password(request.data['currentPassword'])
+    currentPassword = request.data['currentPassword']
     newPassword = make_password(request.data['newPassword'])
     user = User.objects.get(id = id)
-    if user.password != currentPassword:
+    if not user.check_password(currentPassword):
         return Response("Invalid Password",status=status.HTTP_401_UNAUTHORIZED)
     user.password = newPassword
     user.save()
@@ -221,7 +235,7 @@ def Follow(request, id):
 @api_view(['GET'])
 def FriendsList(request):
     friends = Friend.objects.all()
-    serialize = FriendsSeriazer(friends, many=True)
+    serialize = FriendsSerializer(friends, many=True)
     return Response(serialize.data)
 
 @api_view(['POST'])
@@ -271,7 +285,7 @@ def getMessages(request, id):
 @api_view(['GET'])
 def getFollowings(request, id):
     followng = Friend.objects.filter(user = id)
-    serialze = FriendsSeriazer(followng, many = True)
+    serialze = FriendsSerializer(followng, many = True)
     return Response(serialze.data)
 
 @api_view(['GET'])
@@ -291,3 +305,22 @@ def Unfollow(request, id, follow_user):
     friend = Friend.objects.filter(user = id, follow_user = follow_user)
     friend.delete()
     return Response('Unfollowed')
+
+@api_view(['PUT'])
+def checkFriend(request, id, follow_user):
+    try:
+        friend = Friend.objects.get(user = id, follow_user = follow_user)
+        return Response(True)
+    except:
+        return Response(False)
+
+@api_view(['GET'])
+def isLiked(request, userId, postId):
+    try:
+        print('--->',postId,'--->',userId)
+        like = Like.objects.get(user = userId, post = postId)
+        print(like.id)
+        return Response(True)
+    except:
+        return Response(False)
+    

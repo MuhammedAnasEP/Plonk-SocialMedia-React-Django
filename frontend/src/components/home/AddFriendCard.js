@@ -80,12 +80,12 @@ function AddFriendCard() {
                 if(!isFollowed && value.id !== userId){
                 return(
                 <div className="mt-4 flex justify-between -mx-2">
-                  {/* <Link to={`/friendprofile/${po.user.id}`}> */}
+                  <Link to={`/friendprofile/${value.id}`}>
                     <div className="flex items-center gap-3">
                       <Avatar size="medium" urls={value.image}/>
                       <p className="text-[14px] font-semibold ">{value.username}</p>
                     </div>
-                  {/* </Link> */}
+                  </Link>
                   <button onClick={()=>{Follow(value.id)}} className="bg-socialBlue hover:bg-blue-400 px-2 rounded-md text-white text-[12px] font-semibold">Follow</button>
                 </div>
                 )

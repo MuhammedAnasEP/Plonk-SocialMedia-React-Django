@@ -6,6 +6,7 @@ import AuthContext from "../../context/AuthContex";
 import { baseUrl, postimage } from "../../Constants/Constants";
 import Swal from "sweetalert2";
 import { getuser } from "../../Constants/Constants";
+import { Link } from "react-router-dom";
 
 
 function PostFormCard() {
@@ -56,9 +57,11 @@ function PostFormCard() {
         <Card>
             <form onSubmit={PostSubmit}>
                 <div className="flex gap-3">
+                    <Link to='/profile'>
                     <div>
                        <Avatar urls={profile}/>
                     </div>
+                    </Link>
                     <textarea onChange={(e) => { setDescription(e.target.value) }} value={description} className="grow py-3 h-14 outline-none" placeholder="Whats on your mind?" />
                     {image && <img src={URL.createObjectURL(image)} className="w-[60px] h-14 rounded-md" />}
                 </div>

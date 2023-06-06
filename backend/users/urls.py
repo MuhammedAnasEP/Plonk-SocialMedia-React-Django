@@ -14,8 +14,10 @@ urlpatterns = [
     path('comment/',views.addComment),
     path('getcomments/',views.getComments),
     path('like/',views.Likes),
+    path('unlike/',views.Unlike),
     path('getlike/',views.getLike),
     path('savepost/',views.Save),
+    path('unsavepost/',views.Unsave),
     path('getsavedposts/',views.getSavedPosts),
     path('editprofile/<int:id>',views.editProfile),
     path('getusers/',views.getUser),
@@ -35,4 +37,6 @@ urlpatterns = [
     path('savedpost/<int:id>',views.savedPosts),
     path('getnotifications/<int:id>',views.getNotifications),
     path('unfollow/<int:id>/<int:follow_user>',views.Unfollow),
+    path('checkfriend/<int:id>/<int:follow_user>',views.checkFriend),
+    path('isliked/<int:userId>/<int:postId>',views.isLiked),
 ]

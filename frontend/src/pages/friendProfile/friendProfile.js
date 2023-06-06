@@ -5,12 +5,13 @@ import Avatar from "../../components/Avatar";
 import About from "../../components/friendProfile/About";
 import Friends from "../../components/friendProfile/Friends";
 import axios from '../../Axios';
-import { getuser } from "../../Constants/Constants";
+import { check, getuser } from "../../Constants/Constants";
 import { useState, useEffect, useContext } from "react";
 import Post from "../../components/friendProfile/Post";
 import { addchat } from "../../Constants/Constants";
 import AuthContext from "../../context/AuthContex";
-import { unfollow } from "../../Constants/Constants";
+import { unfollow, getfollownglist, follow } from "../../Constants/Constants";
+import swal from "sweetalert2";
 
 function FriendProfile() {
     const location = useLocation()
@@ -22,6 +23,9 @@ function FriendProfile() {
     const [userFirstname, setUserFirstname] = useState()
     const [userLastname, setUserLastname] = useState()
     const [id,setID] = useState(params.userId)
+    const [followingList, setFollowingList] = useState()
+    const [ownerId, setOwnerId] = useState()
+    const [ind,setInd] = useState(false)
     const navigate = useNavigate()
 
     const tabClasses = 'flex gap-1 px-4 py-1 items-center border-b-4 border-b-white';
@@ -29,6 +33,9 @@ function FriendProfile() {
 
     useEffect(()=>{
         getUser()
+        getFollowngList()
+        getOwner()
+        Check()
     },[])
 
     function getUser(){
@@ -37,6 +44,19 @@ function FriendProfile() {
             setUsername(respone.data.username)
             setUserFirstname(respone.data.first_name)
             setUserLastname(respone.data.last_name)
+            setID(respone.data.id)
+        })
+    }
+
+    function getOwner(){
+        axios.post(getuser,JSON.stringify({"user_id":user.user_id}),{headers:{'Content-Type' : 'application/json'}}).then((respone)=>{
+           setOwnerId(respone.data.id)
+        })
+    }
+
+    function getFollowngList() {
+        axios.get(getfollownglist).then((respone) => {
+            setFollowingList(respone.data)
         })
     }
 
@@ -49,8 +69,40 @@ function FriendProfile() {
     }
 
     const Unfollow = (id, follow) => {
-        axios.put(unfollow + id + '/' + follow).then((respone) => {})
+        axios.put(unfollow + id + '/' + follow).then((respone) => {
+            getFollowngList()
+            Check()
+            swal.fire({
+                icon:'success',
+                title:'Followed',
+                showConfirmButton:false,
+                timer: 1500
+            })
+        })
+
     }
+
+    const Check = () => {
+        axios.put(check + user.user_id + '/' + id).then((respone) => {
+            setInd(respone.data)
+            console.log(respone.data)
+        })
+    }
+
+    function Follow(){
+        axios.post(follow+user.user_id,JSON.stringify({'to':id}),{headers:{
+          'Content-Type' : "application/json"
+        }}).then((respone)=>{
+          Check()
+          swal.fire({
+            icon:'success',
+            title:'UnFollowed',
+            showConfirmButton:false,
+            timer: 1500
+          })   
+        })
+      }
+    
 
     return (
         <div>
@@ -69,8 +121,13 @@ function FriendProfile() {
                                     <h2 className="text-3xl font-bold">{username}</h2>
                                     <div className="text-gray-500 leading-4">{userFirstname} {userLastname}</div>
                                 </div>
-                                <div className="flex ml-10 gap-3">
-                                    <button onClick={() => { Unfollow(user.user_id, id) }} className="bg-gray-700 px-2 py-1 text-white font-bold rounded-lg hover:bg-gray-500">Unfollow</button>
+                                <div className="flex ml-10 gap-3">                                        
+                                    <div>
+                                        {ind ? 
+                                        <button onClick={() => { Unfollow(user.user_id, id) }} className="bg-gray-700 px-2 py-1 text-white font-bold rounded-lg hover:bg-gray-500">Unfollow</button> 
+                                        :<button onClick={Follow} className="bg-gray-700 px-2 py-1 text-white font-bold rounded-lg hover:bg-gray-500">Follow</button>
+                                        }
+                                    </div>
                                     {/* <button onClick={addChat} className="bg-gray-700 px-2 py-1 text-white font-bold rounded-lg hover:bg-gray-500">Message</button> */}
                                 </div>
                             </div>

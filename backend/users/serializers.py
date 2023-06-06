@@ -34,7 +34,7 @@ class SavedSerializer(serializers.ModelSerializer):
         model = SavedPosts
         fields = '__all__'
 
-class FriendsSeriazer(serializers.ModelSerializer):
+class FriendsSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     follow_user = UserSerializer()
     class Meta:

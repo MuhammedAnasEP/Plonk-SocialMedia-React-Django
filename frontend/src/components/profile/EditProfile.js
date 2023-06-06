@@ -4,6 +4,7 @@ import AuthContext from "../../context/AuthContex";
 import axios from '../../Axios';
 import { changepassword, editprofile, getuser } from "../../Constants/Constants";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 function EditProfile(){
     
@@ -19,6 +20,7 @@ function EditProfile(){
     const [currentPassword,setCurrentPassword] = useState()
     const [newPassword,setNewPassword] = useState()
     const [Cpassword,setCPassword] = useState()
+    const navigate = useNavigate()
 
     useEffect(()=>{
         getUser()
@@ -55,7 +57,10 @@ function EditProfile(){
                 title: "",
                 showConfirmButton: false,
                 timer: 1000,
+
             });
+            setValidationErrors({})
+            navigate('/profile')
             }).catch((error)=>{
                 if(error.response.status === 406){
                     setValidationErrors({email:error.response.data})
@@ -142,9 +147,18 @@ function EditProfile(){
             }).then((result)=>{
                 if(result.value){
                     axios.put(changepassword+user.user_id,data,{headers:{'Content-Type' : 'application/json'}}).then((respone)=>{
-                        setCPassword("")
-                        setNewPassword("")
-                        setCPassword("")
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "",
+                            showConfirmButton: false,
+                            timer: 1000,})
+                            setCPassword()
+                            setNewPassword()
+                            setCPassword()
+                            setValidationErrors({})
+                            navigate('/profile')
+                            
                     }).catch((error)=>{
                         if(error.response.status === 401){
                             setValidationErrors({currentpassword:error.response.data})

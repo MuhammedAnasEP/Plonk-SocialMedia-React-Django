@@ -5,6 +5,7 @@ import { useContext, useEffect, useState } from "react";
 import AuthContext from "../../context/AuthContex";
 import axios from '../../Axios';
 import { getnotifications } from "../../Constants/Constants";
+import { Link } from "react-router-dom";
 
 function Notifications() {
 
@@ -18,7 +19,6 @@ function Notifications() {
     const getNotifictaion = () =>{
         axios.get(getnotifications+user.user_id).then((respone)=>{
             setNotification(respone.data)
-            console.log('--------->',respone.data);
         })
     }
 
@@ -31,10 +31,12 @@ function Notifications() {
             <Card noPadding={true}>
                 <div className="">
                     {notificarion?.map((data,index)=>(                        
-                    <div className="flex gap-2 items-center border-b p-4">
-                        <Avatar urls={data.sender.image}/>
-                        <div className="flex gap-2"><p className="font-bold">{data.sender.username}</p>{data.message}</div>
+                        <Link to={`/friendprofile/${data.sender.id}`}>
+                    <div key={index} className="flex gap-2 items-center border-b p-4">
+                            <Avatar urls={data.sender.image}/>
+                            <div className="flex gap-2"><p className="font-bold">{data.sender.username}</p>{data.message}</div>
                     </div>
+                        </Link>
                     ))}
                 </div>
             </Card>

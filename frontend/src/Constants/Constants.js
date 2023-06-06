@@ -1,4 +1,5 @@
 export const baseUrl = "http://127.0.0.1:8000/api/";
+// export const baseUrl = "https://plonk.online/api/";
 export const signup = "signup/"
 export const postimage = "postimage/"
 export const getpost = "getpost/"
@@ -26,3 +27,7 @@ export const getfollowings = "getfollowings/"
 export const savedpost = "savedpost/"
 export const getnotifications ="getnotifications/"
 export const unfollow = "unfollow/"
+export const check = "checkfriend/"
+export const islike = "isliked/"
+export const unlike = "unlike/"
+export const unsave = "unsavepost/"
