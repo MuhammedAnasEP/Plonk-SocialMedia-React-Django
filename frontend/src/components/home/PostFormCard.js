@@ -91,12 +91,10 @@ function PostFormCard() {
                             </svg>
                             Mood
                         </button>
-                    </div> */}
-                    {description || indi && 
+                    </div> */} 
                     <div className="grow text-right">
                         <button className="bg-socialBlue text-white px-6 py-0.5 rounded-md">Share</button>
                     </div>
-                    }
                 </div>
             </form>
         </Card>
