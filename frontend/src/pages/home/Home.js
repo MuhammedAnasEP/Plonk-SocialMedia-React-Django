@@ -12,7 +12,7 @@ function Home() {
                     <PostCard/>
                 </div>
                 <div className="w-[30%]">
-                    <AddFriendCard/>
+                        <AddFriendCard/>
                 </div>
             </div>
         </Layout>

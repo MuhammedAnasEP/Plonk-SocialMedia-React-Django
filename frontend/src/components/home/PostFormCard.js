@@ -17,9 +17,9 @@ function PostFormCard() {
 
     const { user } = useContext(AuthContext)
     const [image, setImage] = useState()
-    const [indi, setIndi] = useState(false)
     const [description, setDescription] = useState("")
     const [profile,setProfile] = useState()
+    const [isImage, setIsImage] = useState(false)
     const user_id = user.user_id
 
     console.log("profile : ", profile)
@@ -36,7 +36,7 @@ function PostFormCard() {
             if (response.status === 200) {
                 setImage("")
                 setDescription("")
-                setIndi(false)
+                setIsImage(false)
                 Swal.fire({
                     position: "center",
                     type: "success",
@@ -73,27 +73,13 @@ function PostFormCard() {
                             </svg>
                             <span className="mt-1">Post</span>
                         </button>
-                        <input onChange={(e) => { setImage(e.target.files[0]);setIndi(true) }} name="image" type="file" className=" w-[60px] absolute top-0 opacity-0" />
+                        <input onChange={(e) => { setImage(e.target.files[0]);setIsImage(true)}} name="image" type="file" className=" w-[60px] absolute top-0 opacity-0" />
                     </div>
-                    {/* <div>
-                        <button className="flex gap-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-                            </svg>
-                            Check in
-                        </button>
-                    </div>
-                    <div>
-                        <button className="flex gap-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
-                            </svg>
-                            Mood
-                        </button>
-                    </div> */} 
                     <div className="grow text-right">
-                        <button className="bg-socialBlue text-white px-6 py-0.5 rounded-md">Share</button>
+                        {description || isImage ?
+                        <button className="bg-socialBlue text-white px-6 py-0.5 rounded-md" >Share</button>:
+                        <button className="bg-socialBlue text-white px-6 py-0.5 rounded-md opacity-[50%]" disabled>Share</button>
+                        }
                     </div>
                 </div>
             </form>

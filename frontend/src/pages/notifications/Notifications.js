@@ -26,7 +26,7 @@ function Notifications() {
     <div>
         <Layout>
             <Card className="p-4 mb-2">
-                <h2 className="font-bold text-2xl text-gray-500">Notifications</h2>
+                <h2 className="font-bold text-2xl text-gray-500 text-center">Notifications</h2>
             </Card>
             <Card noPadding={true}>
                 <div className="">

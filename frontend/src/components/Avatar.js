@@ -20,7 +20,7 @@ function Avatar({size,urls}) {
 
     return (
         <div className={`${width} ${hight} rounded-full overflow-hidden`}>
-            {urls ? <img className="object-fill" src={'http://127.0.0.1:8000/'+urls} alt=""></img> : <img className="object-fill" src="/images/profile.jpg" alt=""></img>}
+            {urls ? <img className="object-fill" src={'https://plonk.online'+urls} alt=""></img> : <img className="object-fill" src="/images/profile.jpg" alt=""></img>}
         </div>
     )
 }

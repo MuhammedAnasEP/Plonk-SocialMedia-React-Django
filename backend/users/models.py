@@ -41,6 +41,7 @@ class Notifications(models.Model):
     receiver = models.ForeignKey(User, related_name="reciver", on_delete=models.CASCADE)
     message = models.CharField()
     created = models.DateTimeField(default=timezone.now)
+    is_read = models.BooleanField(default=False)
 
 class Chats(models.Model):
     sender = models.ForeignKey(User, related_name='chat_sender', on_delete=models.CASCADE)

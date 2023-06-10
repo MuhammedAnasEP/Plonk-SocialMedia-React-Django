@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom'
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import axios from '../Axios';
+import AuthContext from '../context/AuthContex';
 
 function Signup() {
 
+    const {user} = useContext(AuthContext)
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -16,6 +18,11 @@ function Signup() {
 
     const [errors,setErrors] =  useState({})
 
+    useEffect(()=>{
+        if(user){
+            navigate('/')
+        }
+    },[])
 
     const handleSubmit = (e) => {
         e.preventDefault() 

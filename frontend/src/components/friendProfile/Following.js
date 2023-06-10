@@ -6,7 +6,7 @@ import axios from '../../Axios';
 import { getfollownglist, getuser } from "../../Constants/Constants";
 import { Link } from "react-router-dom";
 
-function Friends(id){
+function Following(id){
     const params = useParams()
     const [followingList, setFollowingList] = useState()
     const [friend,setFriend] = useState()
@@ -29,7 +29,7 @@ function Friends(id){
     }
     return (
         <Card>
-            <h2 className="text-3xl mb-4 font-bold">Friends</h2>   
+            <h2 className="text-3xl mb-4 font-bold">Following</h2>   
             {
                 followingList?.map((data)=>(
                     friend === data.user.id &&(
@@ -42,9 +42,9 @@ function Friends(id){
                             </div>
                         </div>
                    </Link>
-                    <div>
-                        {/* <button className="bg-gray-300 hover:bg-gray-400 px-3 rounded-md font-bold">Unfollow</button> */}
-                    </div>
+                    {/* <div>
+                        <button className="bg-gray-300 hover:bg-gray-400 px-3 rounded-md font-bold">Unfollow</button>
+                    </div> */}
                 </div>)
                 ))
             }        
@@ -52,4 +52,4 @@ function Friends(id){
     )
 }
 
-export default Friends
+export default Following

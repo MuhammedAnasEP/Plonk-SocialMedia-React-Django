@@ -211,7 +211,7 @@ function EditProfile(){
                         <div className="flex flex-col items-center mb-5 relative">
                             <div className="w-36 h-36 bg-gray-400 rounded-full overflow-hidden">
                                 {profileImage && <img className="object-fill" src={URL.createObjectURL(profileImage)} alt=""></img>}
-                                {oldProfileImage !== null ? <img className="object-fill" src={'http://127.0.0.1:8000/'+oldProfileImage} alt=""></img> : <img className="object-cover" src="/images/profile.jpg" alt=""/>}
+                                {oldProfileImage !== null ? <img className="object-fill" src={'https://plonk.online'+oldProfileImage} alt=""></img> : <img className="object-cover" src="/images/profile.jpg" alt=""/>}
                             </div>
                             <button className="font-bold bg-gray-500 px-2 mt-1 text-white hover:bg-gray-400 rounded-md shadow-md">Change</button>
                             <input onChange={(e)=>setProfileImage(e.target.files[0])} type="file" className="w-14 h-6 absolute bottom-0 opacity-0"/>

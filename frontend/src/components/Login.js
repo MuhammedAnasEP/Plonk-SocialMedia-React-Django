@@ -1,5 +1,5 @@
-import { useContext } from 'react'
-import {Link} from 'react-router-dom'
+import { useContext, useEffect } from 'react'
+import {Link, useNavigate} from 'react-router-dom'
 import AuthContext from '../context/AuthContex'
 
 
@@ -7,11 +7,18 @@ import AuthContext from '../context/AuthContex'
 function Login() {
     let {loginUser} = useContext(AuthContext)
     let {user, errors, setErrors} = useContext(AuthContext)
-    console.log(errors)
+    const navigate = useNavigate()
+
+    useEffect(()=>{
+        if(user){
+            navigate('/')
+        }
+    },[])
 
     const clearErrors = () =>{
         setErrors({})
     }
+
     
     return (
         <div>

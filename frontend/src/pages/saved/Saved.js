@@ -5,10 +5,12 @@ import SavedPostCard from "../../components/SavedPostCard";
 function Saved(){
     return(
         <Layout>
-            <Card className="p-4 mb-2">
-                <h2 className="font-bold text-2xl text-gray-500">Saved Posts</h2>
-            </Card>
-            <SavedPostCard/>
+            <div className="">
+                <Card className="p-4 mb-2">
+                    <h2 className="font-bold text-2xl text-gray-500 text-center">Saved Posts</h2>
+                </Card>
+                <SavedPostCard/>
+            </div>
         </Layout>
     )
 }

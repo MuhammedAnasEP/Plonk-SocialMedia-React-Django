@@ -38,7 +38,7 @@ def Signup(request):
     username = data['username']
     email = data['email']
     password = make_password(data['password'])
-    
+
     if User.objects.filter(username = username):
         return Response('username not available', status=status.HTTP_401_UNAUTHORIZED)
     
@@ -57,9 +57,7 @@ def PostImage(request,id):
     user = User.objects.get(id=id)
     post = Post.objects.create(user = user, image=img,  description = des)
     post.save()
-
     serializer = PostSerializer(post, many=False)
-
     return Response(serializer.data)
 
 @api_view(['GET'])
@@ -75,10 +73,11 @@ def addComment(request):
     comment = request.data['comment']
     user_id = User.objects.get(id = user)
     post_id = Post.objects.get(id = post)
-
     comments = Comment.objects.create(user = user_id, post=post_id, comment = comment)
     comments.save()
-
+    message =' is commentd your post.'
+    notification = Notifications.objects.create(sender = user_id, receiver = post_id.user, message = message)
+    notification.save()
     return Response("Comment Added Succesfully")
 
 @api_view(['GET'])
@@ -105,6 +104,9 @@ def Likes(request):
     post_id = Post.objects.get(id=post)        
     likes = Like.objects.create(user = user_id, post = post_id)
     likes.save()
+    message =' is Liked your post.'
+    notification = Notifications.objects.create(sender = user_id, receiver = post_id.user, message = message)
+    notification.save()
     return Response("Liked")
 
 @api_view(['GET'])
@@ -201,7 +203,6 @@ def editPost(request, id):
     except:
         post.description = request.data['description']
         post.save()
-
     return Response("Post Edited")
 
 @api_view(['POST'])
@@ -221,15 +222,11 @@ def Follow(request, id):
     user = User.objects.get(id=id)
     too = request.data['to']
     to = User.objects.get(id=too)
-    
     follow = Friend.objects.create(user = user, follow_user = to)
     follow.save()
-
-    message = user.username+' is followed you.' 
-    print()
+    message =' is followed you.'
     notification = Notifications.objects.create(sender = user, receiver = to, message = message)
     notification.save()
-
     return Response("Followed")
 
 @api_view(['GET'])
@@ -296,8 +293,8 @@ def savedPosts(request, id):
 
 @api_view(['GET'])
 def getNotifications(request, id):
-    notificatios = Notifications.objects.filter(receiver = id)
-    serialize = NotificationSerializer(notificatios, many = True)
+    notifications = Notifications.objects.filter(receiver = id).order_by('-id')
+    serialize = NotificationSerializer(notifications, many = True)
     return Response(serialize.data)
 
 @api_view(['PUT'])
@@ -317,9 +314,7 @@ def checkFriend(request, id, follow_user):
 @api_view(['GET'])
 def isLiked(request, userId, postId):
     try:
-        print('--->',postId,'--->',userId)
         like = Like.objects.get(user = userId, post = postId)
-        print(like.id)
         return Response(True)
     except:
         return Response(False)

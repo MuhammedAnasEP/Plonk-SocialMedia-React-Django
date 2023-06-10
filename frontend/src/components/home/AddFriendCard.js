@@ -60,7 +60,7 @@ function AddFriendCard() {
   
 
   return (
-    <div className="ml-6">
+    <div className="ml-7 fixed w-[20%] z-0">
       <Card >
         <Link to='/profile'>
         <div className="flex items-center font-semibold gap-3 cursor-pointer">

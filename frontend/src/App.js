@@ -9,7 +9,6 @@ import { AuthProvider } from './context/AuthContex';
 import Saved from './pages/saved/Saved';
 import Notifications from './pages/notifications/Notifications'
 import EditProfile from './components/profile/EditProfile'
-import Message from './pages/message/Message';
 import FriendProfile from './pages/friendProfile/friendProfile';
 
 function App() {
@@ -22,13 +21,15 @@ function App() {
                   <Route path='/' element = {<Home/>}/>
                   <Route path='/profile' element={<Profile/>}>
                     <Route path='posts' element={<Profile/>}/>
-                    <Route path='friends' element={<Profile/>}/>
+                    <Route path='following' element={<Profile/>}/>
+                    <Route path='followers' element={<Profile/>}/>
                     <Route path='about' element={<Profile/>}/>
                     <Route path='edit' element={<EditProfile/>}/>
                   </Route>
                   <Route path='/friendprofile/:userId' element={<FriendProfile/>}/>
                   <Route path='/friendprofile/posts/:userId' element={<FriendProfile/>}/>
-                  <Route path='/friendprofile/friends/:userId' element={<FriendProfile/>}/>
+                  <Route path='/friendprofile/following/:userId' element={<FriendProfile/>}/>
+                  <Route path='/friendprofile/followers/:userId' element={<FriendProfile/>}/>
                   <Route path='/friendprofile/about/:userId' element={<FriendProfile/>}/>
                   <Route path="/saved" element = {<Saved/>}/>
                   <Route path="/notifications" element = {<Notifications/>}/>

@@ -6,7 +6,7 @@ import axios from '../../Axios';
 import { getfollownglist, unfollow } from "../../Constants/Constants";
 import { Link } from "react-router-dom";
 
-function FriendsCard() {
+function Following() {
     const { user } = useContext(AuthContext)
 
     const [followingList, setFollowingList] = useState()
@@ -52,4 +52,4 @@ function FriendsCard() {
     )
 }
 
-export default FriendsCard
+export default Following
