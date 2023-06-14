@@ -9,6 +9,6 @@
         @apply bg-black opacity-90 h-[96%] w-[20rem] rounded-3xl ml-6 p-4 border transition-all duration-500 border border-solid border-glass relative
     }
     .sidebar{
-        @apply flex items-center mt-2 p-4 rounded-lg text-white cursor-pointer hover:bg-white hover:text-black transition-all duration-300
+        @apply flex items-center mt-2 p-4 rounded-lg text-white cursor-pointer bg-white text-black transition-all duration-300
     }
 }

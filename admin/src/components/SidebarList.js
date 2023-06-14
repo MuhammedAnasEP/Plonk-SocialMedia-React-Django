@@ -16,7 +16,7 @@ function SideBarList({toggle}){
             <div className="sidebar">
                 <div className="flex">
                     <FiUsers className="mr-8 text-[1.7rem]"/>
-                    <h2 className={`${toggle ? "opacity-0 delay-200" : ""} text-[1rem] whitespace-pre`}>Users</h2>
+                    <h2 className={`${toggle ? "opacity-0 delay-200" : ""} text-[1rem] whitespace-pre `}>Users</h2>
                 </div>      
             </div>
             <div onClick={logoutUser} className={`${toggle ? "" : "w-[17rem]"} flex p-4 rounded-lg cursor-pointer text-white hover:bg-white hover:text-black transition-all absolute bottom-4  duration-300`}>

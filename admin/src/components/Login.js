@@ -1,7 +1,7 @@
 import { faUser } from '@fortawesome/free-regular-svg-icons';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect} from 'react';
 import axios from '../Axios';
 import { AuthContext } from '../context/AuthContext';
 import jwt_decode from "jwt-decode";
@@ -9,11 +9,18 @@ import { useNavigate } from "react-router-dom";
 
 function Login() {
 
-    const {setUser,setAuthTokens} = useContext(AuthContext)
+
+    const {user,setUser,setAuthTokens} = useContext(AuthContext)
     const [username, setUsername] = useState()
     const [password, setPassword] = useState()
+
     const navigate = useNavigate()
 
+    useEffect(()=>{
+        if(user){
+            navigate('/users')
+        }
+    },[])
 
     function LoginSubmit(e){
         e.preventDefault()
