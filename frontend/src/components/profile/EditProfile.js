@@ -2,9 +2,9 @@ import Card from "../Card";
 import { useContext, useEffect, useState } from "react";
 import AuthContext from "../../context/AuthContex";
 import axios from '../../Axios';
-import { changepassword, editprofile, getuser } from "../../Constants/Constants";
+import { backend, changepassword, editprofile, emailcheck, emailvarification, getuser } from "../../Constants/Constants";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
+import { json, useNavigate } from "react-router-dom";
 
 function EditProfile(){
     
@@ -32,7 +32,7 @@ function EditProfile(){
         formdata.append('firstname',firstname)
         formdata.append('lastname',lastname)
         formdata.append('username',username)
-        formdata.append('email',email)
+        // formdata.append('email',email)
         formdata.append('about',about)
         if(profileImage === 'undefined'){
             formdata.append('profileImage',oldProfileImage)    
@@ -73,6 +73,35 @@ function EditProfile(){
 
     }
 
+    function EmailVarification(e){
+        e.preventDefault()
+        let err = emailValidation()
+        if(err !== false){
+            setValidationErrors(err)
+        }
+        if ( err === false ){
+            console.log("send");
+            const body = JSON.stringify({
+                email
+            });
+            axios.post(emailvarification,body, {
+                headers: { "Content-Type": "application/json" },
+            }).then((respone)=>{
+                Swal.fire({
+                    icon: 'info',
+                    title: `we send a email changing url to ${email}`,
+                    showConfirmButton: false,
+                    timer: 4000
+                  })
+                  setValidationErrors({})
+            }).catch((error)=>{
+                if(error.response.status === 401){
+                    setValidationErrors({email:error.response.data})
+                }
+            });
+        }
+    }
+
     function profileValidate(){
         let error= {}
         let flag = false
@@ -97,7 +126,7 @@ function EditProfile(){
             flag = true
             error.email = "Invalid Email"
         }
-        if (about == ""){
+        if (about === ""){
             flag = true
             error.about = "Write anything about yourself"
         }
@@ -117,8 +146,8 @@ function EditProfile(){
             setAbout(respone.data.about)
             setFirstname(respone.data.first_name)
             setLastname(respone.data.last_name)
-            setUsername(respone.data.username)
-            setEmail(respone.data.email)
+            setUsername(respone.data.username)    
+            setEmail(respone.data.email)       
             setOldProfileImage(respone.data.image)
         })
     }
@@ -173,17 +202,17 @@ function EditProfile(){
         let error = {}
         let flag = false
         const password_pattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&^_-]{8,}$/
-        if(currentPassword == ""){
+        if(currentPassword === ""){
             flag = true
             error.currentpassword = "Current Password should not be empty"
-        }if(newPassword == ""){
+        }if(newPassword === ""){
             flag = true
             error.newpassword = "New Password should not be empty"
         }else if(!password_pattern.test(newPassword)){
             flag = true
             error.newpassword = "Password is invalid, need one uppercase, lowercase and number"
         }
-        if(Cpassword == ""){
+        if(Cpassword === ""){
             flag = true
             error.cpassword = "Confirm Password should not be empty"
         }else if(newPassword !== Cpassword){
@@ -200,7 +229,45 @@ function EditProfile(){
         
     }
 
+    function emailValidation(){
+        let error = {}
+        let flag = false
+        console.log("lkdsjahgk");
 
+        const email_pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        
+        if (email === ""){
+            flag = true
+            error.email = "Email should not be empty"
+        }
+        else if (!email_pattern.test(email)){
+            flag = true
+            error.email = "Invalid Email"
+        }        
+
+        if(flag === true){
+            return error
+        }
+        else{
+            return flag
+        }
+    }
+
+    function checkEmail(){
+        let error = {}
+        let flag = false
+        axios.post(emailcheck,JSON.stringify({'email':email}),{headers:{'Content-Type' : 'application/json'}}).then((respone)=>{
+            
+        }).catch((error)=>{
+            if(error.response.status === 401){            
+                flag = true
+                error.email = "Email is already used"
+                return error
+            }
+        })
+        return flag;
+
+    }
 
     return(
         <div>
@@ -211,7 +278,7 @@ function EditProfile(){
                         <div className="flex flex-col items-center mb-5 relative">
                             <div className="w-36 h-36 bg-gray-400 rounded-full overflow-hidden">
                                 {profileImage && <img className="object-fill" src={URL.createObjectURL(profileImage)} alt=""></img>}
-                                {oldProfileImage !== null ? <img className="object-fill" src={'https://plonk.online'+oldProfileImage} alt=""></img> : <img className="object-cover" src="/images/profile.jpg" alt=""/>}
+                                {oldProfileImage !== null ? <img className="object-fill" src={backend+oldProfileImage} alt=""></img> : <img className="object-cover" src="/images/profile.jpg" alt=""/>}
                             </div>
                             <button className="font-bold bg-gray-500 px-2 mt-1 text-white hover:bg-gray-400 rounded-md shadow-md">Change</button>
                             <input onChange={(e)=>setProfileImage(e.target.files[0])} type="file" className="w-14 h-6 absolute bottom-0 opacity-0"/>
@@ -233,12 +300,6 @@ function EditProfile(){
                             <input onChange={(e)=>{setUsername(e.target.value)}} value={username} className="border rounded-xl p-1 outline-none" placeholder="Username"/>
                         </div>
                         <span className="text-red-600 text-[12px] ml-[10%]  -mt-5 mb-5 ">{validationErrors.username}</span>
-
-                        <div className="flex gap-12 mb-5 items-center"> 
-                            <label className="font-bold">Email</label>
-                            <input onChange={(e)=>{setEmail(e.target.value)}} value={email} className="border rounded-xl p-1 outline-none " placeholder="email"/>
-                        </div>
-                        <span className="text-red-600 text-[12px] ml-[10%]  -mt-5 mb-5 ">{validationErrors.email}</span>
                         {
                             about ? 
                             <div className="flex gap-12 mb-5 items-center">
@@ -258,6 +319,21 @@ function EditProfile(){
                     </form>
                 </div>
             </Card>
+
+            <Card>
+                <h2 className="font-bold mb-10 border-b">Change Email</h2>
+                <form onSubmit={EmailVarification} className="flex flex-col items-center">
+                <div className="flex gap-12 mb-5 items-center"> 
+                    <label className="font-bold">Email</label>
+                    <input onChange={(e)=>{setEmail(e.target.value)}} value={email} className="border rounded-xl p-1 outline-none " placeholder="email"/>
+                </div>
+                <span className="text-red-600 text-[12px] ml-[10%]  -mt-5 mb-5 ">{validationErrors.email}</span>
+                    <div className="mb-5 mt-2 ">
+                        <button className="bg-socialBlue px-2 p-1 rounded-md font-bold text-white">Check</button>
+                    </div>
+                </form>
+            </Card>
+
             <Card>
                 <h2 className="font-bold mb-5 border-b">Change Password</h2>
                 <form onSubmit={changePassword} className="flex flex-col items-center">

@@ -39,4 +39,7 @@ urlpatterns = [
     path('unfollow/<int:id>/<int:follow_user>',views.Unfollow),
     path('checkfriend/<int:id>/<int:follow_user>',views.checkFriend),
     path('isliked/<int:userId>/<int:postId>',views.isLiked),
+    path('emailVerification/',views.EmailVeirification),
+    path('changeemail/<int:id>',views.ChangeEmail),
+    path('markasread/',views.markasRead)
 ]

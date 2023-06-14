@@ -9,6 +9,10 @@ from .serializers import UserSerializer,PostSerializer,CommentSerializer,LikeSer
 from rest_framework import status
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import authenticate
+from django.contrib import messages
+from django.core.mail import send_mail
+from django.shortcuts import render, redirect
+from django.conf import settings
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -165,15 +169,15 @@ def editProfile(request, id):
     print("hello")
     user = User.objects.get(id = id)
     username = request.data['username']
-    email = request.data['email']
+    # email = request.data['email']
     user.first_name = request.data['firstname']
     user.last_name = request.data['lastname']
     if username != user.username:
         if User.objects.filter(username = username):
             return Response('username not available', status=status.HTTP_401_UNAUTHORIZED)
-    if email != user.email:
-        if User.objects.filter(email = email):
-            return Response("Already register with this email",status=status.HTTP_406_NOT_ACCEPTABLE)
+    # if email != user.email:
+    #     if User.objects.filter(email = email):
+    #         return Response("Already register with this email",status=status.HTTP_406_NOT_ACCEPTABLE)
     user.username = request.data['username']
     user.email = request.data['email']
     user.about = request.data['about']
@@ -293,9 +297,17 @@ def savedPosts(request, id):
 
 @api_view(['GET'])
 def getNotifications(request, id):
-    notifications = Notifications.objects.filter(receiver = id).order_by('-id')
+    notifications = Notifications.objects.filter(receiver = id, is_read = False).order_by('-id')
     serialize = NotificationSerializer(notifications, many = True)
     return Response(serialize.data)
+
+@api_view(['POST'])
+def markasRead(request):
+   noti = request.data['notification']
+   notif = Notifications.objects.get(id = noti)
+   notif.is_read = True
+   notif.save()
+   return Response()
 
 @api_view(['PUT'])
 def Unfollow(request, id, follow_user):
@@ -318,4 +330,23 @@ def isLiked(request, userId, postId):
         return Response(True)
     except:
         return Response(False)
-    
+
+@api_view(['POST'])
+def EmailVeirification(request):
+    recipient = request.data['email']
+    if User.objects.filter(email = recipient):
+        return Response("Already register with this email",status=status.HTTP_401_UNAUTHORIZED)
+    else:   
+        subject = 'Email varification for changing the email id'
+        message = 'click link for changing the email http://localhost:3000/email/'+recipient
+        send_mail(subject, 
+            message, settings.EMAIL_HOST_USER, [recipient], fail_silently=False)
+        return Response("sended verification message")
+
+@api_view(['PUT'])
+def ChangeEmail(request,id):
+    user = User.objects.get(id = id)
+    email = request.data['email']
+    user.email = email
+    user.save()
+    return Response("Success")

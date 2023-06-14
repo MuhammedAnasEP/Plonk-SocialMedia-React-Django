@@ -10,6 +10,7 @@ import Saved from './pages/saved/Saved';
 import Notifications from './pages/notifications/Notifications'
 import EditProfile from './components/profile/EditProfile'
 import FriendProfile from './pages/friendProfile/friendProfile';
+import Email from './pages/Email';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
                   <Route path='/friendprofile/about/:userId' element={<FriendProfile/>}/>
                   <Route path="/saved" element = {<Saved/>}/>
                   <Route path="/notifications" element = {<Notifications/>}/>
+                  <Route path="/email/:newEmail" element={<Email/>}/>
                   {/* <Route path="/messages" element = {<Message/>}/>
                   <Route path="/messages/:sender/:receiver" element = {<Message/>}/> */}
                 </Route>
