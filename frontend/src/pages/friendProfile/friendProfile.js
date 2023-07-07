@@ -77,7 +77,7 @@ function FriendProfile() {
             Check()
             swal.fire({
                 icon: 'success',
-                title: 'Followed',
+                title: 'Unfollowed',
                 showConfirmButton: false,
                 timer: 1500
             })
@@ -101,7 +101,7 @@ function FriendProfile() {
             Check()
             swal.fire({
                 icon: 'success',
-                title: 'UnFollowed',
+                title: 'Followed',
                 showConfirmButton: false,
                 timer: 1500
             })

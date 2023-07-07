@@ -32,7 +32,6 @@ function EditProfile(){
         formdata.append('firstname',firstname)
         formdata.append('lastname',lastname)
         formdata.append('username',username)
-        // formdata.append('email',email)
         formdata.append('about',about)
         if(profileImage === 'undefined'){
             formdata.append('profileImage',oldProfileImage)    
@@ -134,7 +133,6 @@ function EditProfile(){
             return error
         }
         else{
-            console.log('else')
             return flag
         }
     }

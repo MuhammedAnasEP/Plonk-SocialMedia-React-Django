@@ -166,20 +166,15 @@ def getAllUsers(request):
 
 @api_view(['PUT'])
 def editProfile(request, id):
-    print("hello")
+    print("hhhhhhhjjjhhhhhhhhhhhhhhhhj")
     user = User.objects.get(id = id)
     username = request.data['username']
-    # email = request.data['email']
     user.first_name = request.data['firstname']
     user.last_name = request.data['lastname']
     if username != user.username:
         if User.objects.filter(username = username):
             return Response('username not available', status=status.HTTP_401_UNAUTHORIZED)
-    # if email != user.email:
-    #     if User.objects.filter(email = email):
-    #         return Response("Already register with this email",status=status.HTTP_406_NOT_ACCEPTABLE)
     user.username = request.data['username']
-    user.email = request.data['email']
     user.about = request.data['about']
     user.image = request.data['profileImage']
     user.save()
@@ -338,7 +333,8 @@ def EmailVeirification(request):
         return Response("Already register with this email",status=status.HTTP_401_UNAUTHORIZED)
     else:   
         subject = 'Email varification for changing the email id'
-        message = 'click link for changing the email http://localhost:3000/email/'+recipient
+        # message = 'click link for changing the email http://localhost:3000/email/'+recipient
+        message = 'click link for changing the email https://www.plonk.live/email/'+recipient
         send_mail(subject, 
             message, settings.EMAIL_HOST_USER, [recipient], fail_silently=False)
         return Response("sended verification message")

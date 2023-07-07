@@ -174,7 +174,7 @@ function SavedPostCard() {
                                 <div>
                                     <p className="mb-1">{data.post.description}</p>
                                     <div className="rounded-md overflow-hidden bg-gray-300 flex justify-center">
-                                        <img className="max-w-full max-h-[550px] rounded-md" src={'http://127.0.0.1:8000/' + data.post.image} alt="" />
+                                        <img className="max-w-full max-h-[550px] rounded-md" src={backend + data.post.image} alt="" />
                                     </div>
                                 </div>
                                 <div className="flex justify-between items-center mt-2">
